@@ -3,6 +3,16 @@
 `PMS_Weekly_Report` 프로그램의 버전별 변경 내역을 기록합니다.
 최상단 버전 항목은 GitHub Actions 빌드 시 GitHub Releases 배포 노트에 자동으로 반영됩니다.
 
+## [v1.0.3] - 2026-11-25
+
+### 🐛 버그 수정
+- **자동 업데이트 후 새 버전 재실행 오류 수정**
+  - PyInstaller `--onefile` 재실행 시 `PYINSTALLER_RESET_ENVIRONMENT=1` 환경 초기화 적용 및 GitHub Actions 빌드 Python 버전(`3.14`) 통일로 구버전(`v1.0.1`)에서의 자동 업데이트 직후 재실행 충돌 해결
+- **Windows 기본 콘솔(`cp949`) UTF-8 자동 전환**
+  - 실행 시작 시 콘솔 코드페이지를 `UTF-8(65001)`로 자동 설정하여 이모지(`📢`) 및 한글 출력 시 `UnicodeEncodeError` 발생 방지
+
+---
+
 ## [v1.0.2] - 2026-11-25
 
 ### ✨ 개선 및 버그 수정

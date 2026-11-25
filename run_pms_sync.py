@@ -23,6 +23,7 @@ import re
 import csv
 import json
 import time
+import ctypes
 import socket
 import shutil
 import argparse
@@ -32,7 +33,22 @@ import urllib.request
 import urllib.error
 from pathlib import Path
 
-CURRENT_VERSION = "v1.0.2"
+# Windows 기본 콘솔(cp949)에서 한글 및 이모지(📢 등) 출력 시 UnicodeEncodeError 방지
+if os.name == "nt":
+    try:
+        ctypes.windll.kernel32.SetConsoleOutputCP(65001)
+        ctypes.windll.kernel32.SetConsoleCP(65001)
+    except Exception:
+        pass
+for _stream_name in ("stdout", "stderr"):
+    _stream = getattr(sys, _stream_name, None)
+    if _stream and hasattr(_stream, "reconfigure"):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
+CURRENT_VERSION = "v1.0.3"
 GITHUB_REPO = "nuevo-Sumin/pms-weekly-report"
 EXE_ASSET_NAME = "PMS_Weekly_Report.exe"
 USER_NOTICE_MESSAGE = "[📢📢📢📢📢] 사용자 여러분 최고 멋져 해피 연말"
@@ -235,7 +251,10 @@ def check_and_apply_auto_update() -> bool:
         print(f"[+] {latest_tag} 업데이트 완료! 최신 버전으로 다시 시작합니다...\n")
 
         child_args = [str(current_exe), "--skip-update"] + [a for a in sys.argv[1:] if a != "--skip-update"]
-        subprocess.call(child_args)
+        child_env = os.environ.copy()
+        child_env["PYINSTALLER_RESET_ENVIRONMENT"] = "1"
+        child_env.pop("_MEIPASS2", None)
+        subprocess.call(child_args, env=child_env)
         return True
 
     except Exception as e:
