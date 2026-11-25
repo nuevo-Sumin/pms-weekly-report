@@ -1,0 +1,16 @@
+# Chrome 디버깅 프로필 및 임시 캐시 제외
+chrome_profile/
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# PyInstaller 빌드 산출물 및 업데이트 백업 파일
+build/
+dist/
+*.old
+*.new
+
+# 실행일자 기반 임시 다운로드 폴더
+downloads*/
